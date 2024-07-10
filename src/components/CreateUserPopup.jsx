@@ -43,7 +43,7 @@ const CreateUserPopup = ({ open, onClose }) => {
         formData
       );
       setFeedback("Success. Welcome back!");
-      setTimeout(onClose, 5000);
+      setTimeout(onClose, 3000);
     } catch (error) {
       console.error("Error submitting form:", error);
       setFeedback(

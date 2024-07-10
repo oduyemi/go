@@ -57,10 +57,10 @@ export const AllUsers = () => {
                 <TableCell>{user.email}</TableCell>
                 <TableCell>{user.role}</TableCell>
                 <TableCell align="right">
-                  <Button variant="text" color="primary">
+                  <Button variant="text" color="success">
                     Edit
                   </Button>
-                  <Button variant="text" color="secondary">
+                  <Button variant="text" color="error">
                     Delete
                   </Button>
                 </TableCell>

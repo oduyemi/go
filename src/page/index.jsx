@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, InputBase, Avatar, Typography } from "@mui/material";
 import defaultAvatar from "../assets/images/avatar.png";
-import logo from "../assets/images/logo.png"; // Import the logo directly
+import logo from "../assets/images/logo.png";
 
 const Home = () => {
   return (
