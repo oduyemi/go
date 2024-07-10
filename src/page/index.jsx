@@ -22,18 +22,14 @@ const Home = () => {
         
       </Box>
       <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Box sx={{ display: 'flex' }}>
-                {['Notifications', 'Wallet', 'Enquiry', 'Settings'].map((text) => (
-                    <Typography key={text} variant="h6" sx={{ mx: 2, fontWeight: 'bold' }}>
-                    {text}
-                    </Typography>
-                ))}
-            </Box>
-            <Avatar src={defaultAvatar} alt="User" sx={{ width: 32, height: 32, mr: 1 }} />
-      </Box>
-      <Box display="flex">
-        <Sidebar />
-        <AllUsers />
+      <Box sx={{ display: 'flex' }}>
+          {['Notifications', 'Wallet', 'Enquiry', 'Settings'].map((text) => (
+            <Typography key={text} variant="h6" sx={{ mx: 2, fontWeight: 'bold' }}>
+              {text}
+            </Typography>
+          ))}
+        </Box>
+        <Avatar src={defaultAvatar} alt="User" sx={{ width: 32, height: 32, mr: 1 }} />
       </Box>
     </Box>
   );

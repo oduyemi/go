@@ -1,14 +1,20 @@
 import './App.css';
-
+import { Box } from '@mui/material';
+import { Sidebar } from './components/Sidebar';
+import { AllUsers } from './components/AllUsers';
 
 
 import Home from './page';
 
 function App() {
   return (
-    <div className="App">
+    <Box className="App">
       <Home />
-    </div>
+      <Box display="flex">
+        <Sidebar />
+        <AllUsers />
+      </Box>
+    </Box>
   );
 }
 
