@@ -16,6 +16,7 @@ import {
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import axios from "axios";
+import usersData from './users.json'; // Assuming users.json is in the same directory as this file
 
 const CreateUserPopup = ({ open, onClose, setUsers }) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -41,7 +42,7 @@ const CreateUserPopup = ({ open, onClose, setUsers }) => {
 
     try {
       const response = await axios.post("https://beeceptor.com/crud-api/users", formData);
-      const newUser = response.data; 
+      const newUser = response.data; // Assuming API returns the created user object
 
       setUsers((prevUsers) => [...prevUsers, newUser]);
       setFeedback("Success. New user added!");
@@ -52,6 +53,21 @@ const CreateUserPopup = ({ open, onClose, setUsers }) => {
       setTimeout(() => {
         setError("");
       }, 3000);
+    }
+  };
+
+  const addUsersFromJson = async () => {
+    try {
+      for (const user of usersData) {
+        const response = await axios.post("https://beeceptor.com/crud-api/users", user);
+        const newUser = response.data; // Assuming API returns the created user object
+
+        setUsers((prevUsers) => [...prevUsers, newUser]);
+      }
+      setFeedback("Success. Users added from JSON!");
+    } catch (error) {
+      console.error("Error adding users from JSON:", error);
+      setError("Failed to add users. Please try again.");
     }
   };
 
@@ -85,6 +101,9 @@ const CreateUserPopup = ({ open, onClose, setUsers }) => {
             <Typography variant="body1">{error}</Typography>
           </Box>
         )}
+        <Button onClick={addUsersFromJson} variant="contained" color="primary" sx={{ mb: 2 }}>
+          Add Users from JSON
+        </Button>
         <form onSubmit={handleSubmit}>
           <TextField
             fullWidth
