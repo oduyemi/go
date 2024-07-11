@@ -5,9 +5,6 @@ export const PageDetail = () => {
   return (
     <Box
       maxWidth="xl"
-      sx={{
-        // Add any additional styling if needed
-      }}
       className="mt-10 banner md:pl-32"
     >
       <Box>
@@ -15,7 +12,7 @@ export const PageDetail = () => {
           variant="subtitle1"
           className="subhead md:text-2xl text-gray-500 sm:text-sm trp"
           sx={{
-            marginBottom: 3, // Use MUI spacing for consistent margins
+            marginBottom: 3,
             fontWeight: 300,
             fontSize: "10px",
           }}
@@ -27,7 +24,7 @@ export const PageDetail = () => {
           variant="h5"
           className="topic md:text-2xl sm:text-sm trp"
           sx={{
-            marginBottom: 3, // Use MUI spacing for consistent margins
+            marginBottom: 3, 
             fontWeight: 500,
           }}
           gutterBottom
@@ -38,7 +35,7 @@ export const PageDetail = () => {
           variant="subtitle1"
           className="subhead md:text-2xl text-gray-500 sm:text-sm trp"
           sx={{
-            marginBottom: 3, // Use MUI spacing for consistent margins
+            marginBottom: 3,
             fontWeight: 300,
             fontSize: "10px",
           }}
