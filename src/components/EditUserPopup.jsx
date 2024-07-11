@@ -5,6 +5,7 @@ import Button from '../elements/Button';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import axios from 'axios';
+import usersData from './users'; // Importing the users.json file
 
 const EditUserPopup = ({ open, onClose, userId }) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -20,26 +21,19 @@ const EditUserPopup = ({ open, onClose, userId }) => {
 
   useEffect(() => {
     if (open && userId) {
-      const fetchUserData = async () => {
-        try {
-          const response = await axios.get(
-            `https://ca10fe5fb746dd777eed.free.beeceptor.com/api/users/${userId}`
-          );
-          if (response.data.data) {
-            setFormData(response.data.data);
-            setLoading(false); 
-          } else {
-            setFeedback('No users to edit.');
-            setLoading(false); 
-          }
-        } catch (error) {
-          console.error('Error fetching user data from the server', error);
-          setError('Error fetching user data. Please try again later.'); 
-          setLoading(false); 
-        }
-      };
-
-      fetchUserData();
+      const user = usersData.find(user => user.id === userId);
+      if (user) {
+        setFormData({
+          email: user.email,
+          fullname: user.name,
+          role: user.role,
+          password: user.password, 
+        });
+        setLoading(false); 
+      } else {
+        setFeedback('No user found.');
+        setLoading(false); 
+      }
     }
   }, [open, userId]);
 
@@ -51,26 +45,29 @@ const EditUserPopup = ({ open, onClose, userId }) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    try {
-      const response = await axios.put(
-        `https://ca10fe5fb746dd777eed.free.beeceptor.com/api/users/${userId}`,
-        formData
-      );
-      setFeedback('Success. User updated!');
-      setTimeout(() => {
-        onClose();
-      }, 5000);
-    } catch (error) {
-      console.error('Error submitting form:', error);
-      setFeedback(
-        'An error occurred while submitting the form. Please try again later.'
-      );
-      setTimeout(() => {
-        onClose();
-      }, 3000);
-    }
+    const updatedUsers = usersData.map(user => {
+      if (user.id === userId) {
+        return {
+          ...user,
+          email: formData.email,
+          name: formData.fullname,
+          role: formData.role,
+          // You can add password update logic here if needed
+        };
+      }
+      return user;
+    });
+
+    // Write updatedUsers back to JSON file (in real scenarios, you'd use backend API or storage)
+    // For simplicity in this example, we'll just log the updated users
+    console.log(updatedUsers);
+
+    setFeedback('Success. User updated!');
+    setTimeout(() => {
+      onClose();
+    }, 5000);
   };
 
   return (
@@ -189,7 +186,7 @@ const EditUserPopup = ({ open, onClose, userId }) => {
                       >
                         <option value=''>Select Role</option>
                         <option value='admin'>Admin</option>
-                        <option value='sales'>Sales Manager</option>
+                        <option value='salesmanager'>Sales Manager</option>
                         <option value='salesrep'>Sales Representative</option>
                       </select>
                     </Box>

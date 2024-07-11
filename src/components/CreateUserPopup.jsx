@@ -15,9 +15,9 @@ import {
   DialogTitle,
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import axios from "axios";
+import usersData from './users'; 
 
-const CreateUserPopup = ({ open, onClose }) => {
+const CreateUserPopup = ({ open, onClose, setUsers }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
@@ -36,25 +36,19 @@ const CreateUserPopup = ({ open, onClose }) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
+
+    const newUserId = usersData.length + 1;
+    const newUser = { id: newUserId, ...formData };
+
     try {
-      const response = await axios.post(
-        "https://ca10fe5fb746dd777eed.free.beeceptor.com/api/users/",
-        formData
-      );
-      if (response.status === 200) {
-        setFeedback("Success. New user added!");
-        setTimeout(onClose, 3000);
-      } else {
-        setError("Failed to add user. Please try again.");
-        setTimeout(() => {
-          setError("");
-        }, 3000);
-      }
+      setUsers([...usersData, newUser]);
+      setFeedback("Success. New user added!");
+      setTimeout(onClose, 3000);
     } catch (error) {
-      console.error("Error submitting form:", error);
-      setError("An error occurred while submitting the form. Please try again later.");
+      console.error("Error adding new user:", error);
+      setError("Failed to add user. Please try again.");
       setTimeout(() => {
         setError("");
       }, 3000);
@@ -122,7 +116,7 @@ const CreateUserPopup = ({ open, onClose }) => {
             >
               <MenuItem value="">Select Role</MenuItem>
               <MenuItem value="admin">Admin</MenuItem>
-              <MenuItem value="sales">Sales Manager</MenuItem>
+              <MenuItem value="salesmanager">Sales Manager</MenuItem>
               <MenuItem value="salesrep">Sales Representative</MenuItem>
             </Select>
           </FormControl>

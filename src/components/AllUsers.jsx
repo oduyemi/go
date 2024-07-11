@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Box,
   Button,
@@ -17,46 +17,28 @@ import {
   DialogTitle,
   Typography,
 } from "@mui/material";
-import axios from "axios";
+import {PageDetail} from "./PageDetail"
 import { CreateUserPopup } from "./CreateUserPopup";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
-import { PageDetail } from "./PageDetail";
+import usersData from './users';
 
 const AllUsers = () => {
-  const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState(usersData); 
   const [popupOpen, setPopupOpen] = useState(false);
-  const [loading, setLoading] = useState(true); 
-  const [error, setError] = useState(null); 
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const handlePopupOpen = () => setPopupOpen(true);
   const handlePopupClose = () => setPopupOpen(false);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(
-          "https://ca10fe5fb746dd777eed.free.beeceptor.com/api/users/",
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
-        setUsers(response.data.data);
-        setLoading(false); 
-      } catch (error) {
-        console.error("Error fetching data from the server", error);
-        setError("Error fetching data. Please try again later.");
-        setLoading(false); 
-      }
-    };
-
-    fetchData();
-  }, []);
+  const handleAddUser = (newUser) => {
+    newUser.id = users.length + 1; 
+    setUsers([...users, newUser]);
+  };
 
   return (
     <Box>
-      <PageDetail />
+       <PageDetail />
       <Box sx={{ p: 4 }}>
         <Box
           sx={{
@@ -117,7 +99,7 @@ const AllUsers = () => {
               </TableHead>
               <TableBody>
                 {users.map((user, index) => (
-                  <TableRow key={index}>
+                  <TableRow key={user.id}>
                     <TableCell padding="checkbox">
                       <Checkbox />
                     </TableCell>
@@ -142,7 +124,7 @@ const AllUsers = () => {
         <Dialog open={popupOpen} onClose={handlePopupClose}>
           <DialogTitle>Create New User</DialogTitle>
           <DialogContent>
-            <CreateUserPopup onClose={handlePopupClose} />
+            <CreateUserPopup onClose={handlePopupClose} onAddUser={handleAddUser} />
           </DialogContent>
           <DialogActions>
             <Button onClick={handlePopupClose} color="primary">
