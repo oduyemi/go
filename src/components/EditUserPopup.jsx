@@ -15,6 +15,8 @@ const EditUserPopup = ({ open, onClose, userId }) => {
     password: '',
   });
   const [feedback, setFeedback] = useState('');
+  const [loading, setLoading] = useState(true); 
+  const [error, setError] = useState(null); 
 
   useEffect(() => {
     if (open && userId) {
@@ -23,9 +25,17 @@ const EditUserPopup = ({ open, onClose, userId }) => {
           const response = await axios.get(
             `https://ca10fe5fb746dd777eed.free.beeceptor.com/api/users/${userId}`
           );
-          setFormData(response.data.data);
+          if (response.data.data) {
+            setFormData(response.data.data);
+            setLoading(false); 
+          } else {
+            setFeedback('No users to edit.');
+            setLoading(false); 
+          }
         } catch (error) {
           console.error('Error fetching user data from the server', error);
+          setError('Error fetching user data. Please try again later.'); 
+          setLoading(false); 
         }
       };
 
@@ -101,109 +111,130 @@ const EditUserPopup = ({ open, onClose, userId }) => {
             </Box>
             <form onSubmit={handleSubmit}>
               <Box maxWidth='400px'>
-                {feedback && (
+                {loading ? (
+                  <Typography>Loading...</Typography>
+                ) : error ? (
+                  <Typography>Error: {error}</Typography>
+                ) : feedback ? (
                   <Box
                     className={`text-center text-white py-2 mb-4 ${
-                      feedback.includes('Success') ? 'bg-green-500' : 'bg-red-500'
+                      feedback.includes('Success')
+                        ? 'bg-green-500'
+                        : 'bg-red-500'
                     }`}
                   >
                     <Typography variant='body1'>{feedback}</Typography>
                   </Box>
+                ) : (
+                  <React.Fragment>
+                    <Box className='mb-1'>
+                      <label
+                        htmlFor='email'
+                        className='text-xs font-semibold px-1'
+                      >
+                        Email Address
+                      </label>
+                      <input
+                        type='email'
+                        name='email'
+                        value={formData.email}
+                        onChange={handleChange}
+                        className='
+                          w-full px-3 py-1 rounded-xl
+                          border-2 border-gray-200 outline-none
+                          focus:border-green-700
+                        '
+                        placeholder="User's Email Address"
+                        required
+                      />
+                    </Box>
+                    <Box className='mb-1'>
+                      <label
+                        htmlFor='fullname'
+                        className='text-xs font-semibold px-1'
+                      >
+                        Full Name
+                      </label>
+                      <input
+                        name='fullname'
+                        type='text'
+                        className='
+                          w-full px-3 py-1 rounded-xl
+                          border-2 border-gray-200 outline-none
+                          focus:border-green-700
+                        '
+                        placeholder="User's Full Name"
+                        onChange={handleChange}
+                        value={formData.fullname}
+                        required
+                      />
+                    </Box>
+                    <Box className='mb-1'>
+                      <label
+                        htmlFor='role'
+                        className='text-xs font-semibold px-1'
+                      >
+                        Role
+                      </label>
+                      <select
+                        name='role'
+                        className='
+                          w-full px-3 py-1 rounded-xl
+                          border-2 border-gray-200 outline-none
+                          focus:border-green-700
+                        '
+                        onChange={handleChange}
+                        value={formData.role}
+                        required
+                      >
+                        <option value=''>Select Role</option>
+                        <option value='admin'>Admin</option>
+                        <option value='sales'>Sales Manager</option>
+                        <option value='salesrep'>Sales Representative</option>
+                      </select>
+                    </Box>
+
+                    <Box className='mb-1 relative'>
+                      <label
+                        htmlFor='password'
+                        className='text-xs font-semibold px-1'
+                      >
+                        Change Password
+                      </label>
+                      <input
+                        name='password'
+                        type={showPassword ? 'text' : 'password'}
+                        className='
+                          w-full px-3 py-1 rounded-xl
+                          border-2 border-gray-200 outline-none
+                          focus:border-green-700
+                        '
+                        placeholder="User's Password"
+                        onChange={handleChange}
+                        value={formData.password}
+                      />
+                      <button
+                        type='button'
+                        className='absolute inset-y-0 right-0 pr-2 flex items-center'
+                        onClick={toggleShowPassword}
+                      >
+                        {showPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
+                      </button>
+                    </Box>
+
+                    <Box className='mb-1'>
+                      <Button
+                        type='submit'
+                        className='
+                          block w-full px-3 py-3 rounded-xl
+                          text-white font-semibold
+                        '
+                      >
+                        Edit User
+                      </Button>
+                    </Box>
+                  </React.Fragment>
                 )}
-                <Box className='mb-1'>
-                  <label htmlFor='email' className='text-xs font-semibold px-1'>
-                    Email Address
-                  </label>
-                  <input
-                    type='email'
-                    name='email'
-                    value={formData.email}
-                    onChange={handleChange}
-                    className='
-                      w-full px-3 py-1 rounded-xl
-                      border-2 border-gray-200 outline-none
-                      focus:border-green-700
-                    '
-                    placeholder="User's Email Address"
-                    required
-                  />
-                </Box>
-                <Box className='mb-1'>
-                  <label htmlFor='fullname' className='text-xs font-semibold px-1'>
-                    Full Name
-                  </label>
-                  <input
-                    name='fullname'
-                    type='text'
-                    className='
-                      w-full px-3 py-1 rounded-xl
-                      border-2 border-gray-200 outline-none
-                      focus:border-green-700
-                    '
-                    placeholder="User's Full Name"
-                    onChange={handleChange}
-                    value={formData.fullname}
-                    required
-                  />
-                </Box>
-                <Box className='mb-1'>
-                  <label htmlFor='role' className='text-xs font-semibold px-1'>
-                    Role
-                  </label>
-                  <select
-                    name='role'
-                    className='
-                      w-full px-3 py-1 rounded-xl
-                      border-2 border-gray-200 outline-none
-                      focus:border-green-700
-                    '
-                    onChange={handleChange}
-                    value={formData.role}
-                    required
-                  >
-                    <option value=''>Select Role</option>
-                    <option value='admin'>Admin</option>
-                    <option value='sales'>Sales Manager</option>
-                    <option value='salesrep'>Sales Representative</option>
-                  </select>
-                </Box>
-
-                <Box className='mb-1 relative'>
-                  <label htmlFor='password' className='text-xs font-semibold px-1'>
-                    Change Password
-                  </label>
-                  <input
-                    name='password'
-                    type={showPassword ? 'text' : 'password'}
-                    className='
-                      w-full px-3 py-1 rounded-xl
-                      border-2 border-gray-200 outline-none
-                      focus:border-green-700
-                    '
-                    placeholder="User's Password"
-                    onChange={handleChange}
-                    value={formData.password}
-                  />
-                  <button
-                    type='button'
-                    className='absolute inset-y-0 right-0 pr-2 flex items-center'
-                    onClick={toggleShowPassword}
-                  >
-                    {showPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
-                  </button>
-                </Box>
-
-                <Box className='mb-1'>
-                  <Button
-                    type='submit'
-                    className='
-                      block w-full px-3 py-3 rounded-xl
-                      text-white font-semibold
-                    '
-                  >
-                    Edit User
-                  </Button>
-                </Box>
               </Box>
             </form>
           </Box>

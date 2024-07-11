@@ -15,6 +15,7 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  Typography,
 } from "@mui/material";
 import axios from "axios";
 import { CreateUserPopup } from "./CreateUserPopup";
@@ -24,6 +25,8 @@ import { PageDetail } from "./PageDetail";
 const AllUsers = () => {
   const [users, setUsers] = useState([]);
   const [popupOpen, setPopupOpen] = useState(false);
+  const [loading, setLoading] = useState(true); 
+  const [error, setError] = useState(null); 
 
   const handlePopupOpen = () => setPopupOpen(true);
   const handlePopupClose = () => setPopupOpen(false);
@@ -40,9 +43,11 @@ const AllUsers = () => {
           }
         );
         setUsers(response.data.data);
+        setLoading(false); 
       } catch (error) {
         console.error("Error fetching data from the server", error);
-        // Optionally handle errors, e.g., display an error message
+        setError("Error fetching data. Please try again later.");
+        setLoading(false); 
       }
     };
 
@@ -90,41 +95,49 @@ const AllUsers = () => {
             New User
           </Button>
         </Box>
-        <TableContainer component={Paper}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell padding="checkbox">
-                  <Checkbox />
-                </TableCell>
-                <TableCell>Name</TableCell>
-                <TableCell>Email</TableCell>
-                <TableCell>Role</TableCell>
-                <TableCell align="right">Action</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {users.map((user, index) => (
-                <TableRow key={index}>
+        {loading ? (
+          <Typography>Loading...</Typography>
+        ) : error ? (
+          <Typography>Error: {error}</Typography>
+        ) : users.length === 0 ? (
+          <Typography>You don't have users at the moment.</Typography>
+        ) : (
+          <TableContainer component={Paper}>
+            <Table>
+              <TableHead>
+                <TableRow>
                   <TableCell padding="checkbox">
                     <Checkbox />
                   </TableCell>
-                  <TableCell>{user.name}</TableCell>
-                  <TableCell>{user.email}</TableCell>
-                  <TableCell>{user.role}</TableCell>
-                  <TableCell align="right">
-                    <Button variant="text" color="success">
-                      Edit
-                    </Button>
-                    <Button variant="text" color="error">
-                      Delete
-                    </Button>
-                  </TableCell>
+                  <TableCell>Name</TableCell>
+                  <TableCell>Email</TableCell>
+                  <TableCell>Role</TableCell>
+                  <TableCell align="right">Action</TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+              </TableHead>
+              <TableBody>
+                {users.map((user, index) => (
+                  <TableRow key={index}>
+                    <TableCell padding="checkbox">
+                      <Checkbox />
+                    </TableCell>
+                    <TableCell>{user.name}</TableCell>
+                    <TableCell>{user.email}</TableCell>
+                    <TableCell>{user.role}</TableCell>
+                    <TableCell align="right">
+                      <Button variant="text" color="success">
+                        Edit
+                      </Button>
+                      <Button variant="text" color="error">
+                        Delete
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        )}
 
         <Dialog open={popupOpen} onClose={handlePopupClose}>
           <DialogTitle>Create New User</DialogTitle>
