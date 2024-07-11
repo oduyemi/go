@@ -2,28 +2,27 @@ import React, { useState } from "react";
 import Modal from "react-modal";
 import { Box, Typography, Button, IconButton } from "@mui/material";
 import { Delete, Close } from "@mui/icons-material";
-import usersData from './users'; 
+import axios from "axios";
+
+
 
 const DeleteUserPopup = ({ open, onClose, userId }) => {
-  const [deleting, setDeleting] = useState(false);
-  const [error, setError] = useState(null);
+  const [deleting, setDeleting] = useState(false); 
+  const [error, setError] = useState(null); 
 
-  const handleDeleteUser = () => {
+  const handleDeleteUser = async () => {
     try {
-      setDeleting(true);
-
-      const updatedUsers = usersData.filter(user => user.id !== userId);
-      setTimeout(() => {
-        console.log(updatedUsers);
-
-        setDeleting(false);
-        onClose();
-      }, 2000); 
-
+      setDeleting(true); 
+      const response = await axios.delete(
+        `https://ca10fe5fb746dd777eed.free.beeceptor.com/api/users/${userId}`
+      );
+      console.log("User deleted successfully:", response.data);
+      setDeleting(false); 
+      onClose(); 
     } catch (error) {
       console.error("Error deleting user:", error);
-      setError("An error occurred while deleting the user.");
-      setDeleting(false);
+      setError("An error occurred while deleting the user."); 
+      setDeleting(false); 
     }
   };
 
@@ -59,7 +58,7 @@ const DeleteUserPopup = ({ open, onClose, userId }) => {
             onClick={onClose}
             variant="outlined"
             color="success"
-            disabled={deleting} 
+            disabled={deleting} // Disable button while deleting
             sx={{ mr: 1 }}
           >
             Cancel
@@ -69,7 +68,7 @@ const DeleteUserPopup = ({ open, onClose, userId }) => {
             variant="outlined"
             color="error"
             startIcon={<Delete />}
-            disabled={deleting}
+            disabled={deleting} 
             sx={{ ml: 1 }}
           >
             {deleting ? "Deleting..." : "Yes, Delete"}
