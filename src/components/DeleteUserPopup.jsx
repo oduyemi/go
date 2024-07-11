@@ -1,19 +1,28 @@
-import React from "react";
+import React, { useState } from "react";
 import Modal from "react-modal";
 import { Box, Typography, Button, IconButton } from "@mui/material";
 import { Delete, Close } from "@mui/icons-material";
 import axios from "axios";
 
+
+
 const DeleteUserPopup = ({ open, onClose, userId }) => {
+  const [deleting, setDeleting] = useState(false); 
+  const [error, setError] = useState(null); 
+
   const handleDeleteUser = async () => {
     try {
+      setDeleting(true); 
       const response = await axios.delete(
         `https://ca10fe5fb746dd777eed.free.beeceptor.com/api/users/${userId}`
       );
       console.log("User deleted successfully:", response.data);
-      onClose();
+      setDeleting(false); 
+      onClose(); 
     } catch (error) {
       console.error("Error deleting user:", error);
+      setError("An error occurred while deleting the user."); 
+      setDeleting(false); 
     }
   };
 
@@ -49,7 +58,7 @@ const DeleteUserPopup = ({ open, onClose, userId }) => {
             onClick={onClose}
             variant="outlined"
             color="success"
-            fullWidth
+            disabled={deleting} // Disable button while deleting
             sx={{ mr: 1 }}
           >
             Cancel
@@ -59,12 +68,17 @@ const DeleteUserPopup = ({ open, onClose, userId }) => {
             variant="outlined"
             color="error"
             startIcon={<Delete />}
-            fullWidth
+            disabled={deleting} 
             sx={{ ml: 1 }}
           >
-            Yes, Delete
+            {deleting ? "Deleting..." : "Yes, Delete"}
           </Button>
         </Box>
+        {error && (
+          <Typography variant="body2" color="error" mt={2} textAlign="center">
+            {error}
+          </Typography>
+        )}
       </Box>
     </Modal>
   );

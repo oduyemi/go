@@ -26,6 +26,7 @@ const CreateUserPopup = ({ open, onClose }) => {
     password: "",
   });
   const [feedback, setFeedback] = useState("");
+  const [error, setError] = useState("");
 
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
@@ -38,18 +39,25 @@ const CreateUserPopup = ({ open, onClose }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(
+      const response = await axios.post(
         "https://ca10fe5fb746dd777eed.free.beeceptor.com/api/users/",
         formData
       );
-      setFeedback("Success. Welcome back!");
-      setTimeout(onClose, 3000);
+      if (response.status === 200) {
+        setFeedback("Success. New user added!");
+        setTimeout(onClose, 3000);
+      } else {
+        setError("Failed to add user. Please try again.");
+        setTimeout(() => {
+          setError("");
+        }, 3000);
+      }
     } catch (error) {
       console.error("Error submitting form:", error);
-      setFeedback(
-        "An error occurred while submitting the form. Please try again later."
-      );
-      setTimeout(onClose, 3000);
+      setError("An error occurred while submitting the form. Please try again later.");
+      setTimeout(() => {
+        setError("");
+      }, 3000);
     }
   };
 
@@ -68,6 +76,19 @@ const CreateUserPopup = ({ open, onClose }) => {
             }}
           >
             <Typography variant="body1">{feedback}</Typography>
+          </Box>
+        )}
+        {error && (
+          <Box
+            sx={{
+              textAlign: "center",
+              color: "#fff",
+              py: 2,
+              mb: 2,
+              bgcolor: "red",
+            }}
+          >
+            <Typography variant="body1">{error}</Typography>
           </Box>
         )}
         <form onSubmit={handleSubmit}>
@@ -123,7 +144,12 @@ const CreateUserPopup = ({ open, onClose }) => {
             />
           </FormControl>
           <Box mt={2}>
-            <Button type="submit" fullWidth variant="contained" color="primary">
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="primary"
+            >
               Add User
             </Button>
           </Box>
