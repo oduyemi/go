@@ -1,36 +1,40 @@
 import React from "react";
-import { Box, InputBase, Avatar, Typography } from "@mui/material";
+import { Box, InputBase, Avatar, Typography, Grid } from "@mui/material";
 import defaultAvatar from "../assets/images/avatar.png";
 import logo from "../assets/images/logo.png";
-import { Sidebar } from "../components/Sidebar";
-import { AllUsers } from "../components/AllUsers";
 
 const Home = () => {
   return (
-    <Box sx={{ color: 'black', boxShadow: 1, p: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-      <Box sx={{ display: 'flex', alignItems: 'center' }}>
-        <img src={logo} alt="Logo" style={{ width: 100, height: 72, marginRight: 16 }} />
-        <InputBase
-          placeholder="Search here"
-          sx={{ bgcolor: 'grey.100', outline: 'none', flexGrow: 1, mr: 2, px: 1 }}
-          className='
-          w-full px-3 py-1 rounded-xl
-          border-2 border-gray-200 outline-none
-          focus:border-green-700
-          '
-        />
-        
-      </Box>
-      <Box sx={{ display: 'flex', alignItems: 'center' }}>
-      <Box sx={{ display: 'flex' }}>
-          {['Notifications', 'Wallet', 'Enquiry', 'Settings'].map((text) => (
-            <Typography key={text} variant="h6" sx={{ mx: 2, fontWeight: 'bold' }}>
-              {text}
-            </Typography>
-          ))}
-        </Box>
-        <Avatar src={defaultAvatar} alt="User" sx={{ width: 32, height: 32, mr: 1 }} />
-      </Box>
+    <Box sx={{ bgcolor: "white", boxShadow: 1, p: 2 }}>
+      <Grid container alignItems="center" justifyContent="space-between">
+        {/* Left Section: Logo and Search Input */}
+        <Grid item xs={12} md={6} sx={{ display: "flex", alignItems: "center" }}>
+          <img src={logo} alt="Logo" style={{ width: 100, height: 72, marginRight: 16 }} />
+          <InputBase
+            placeholder="Search here"
+            sx={{
+              bgcolor: "grey.100",
+              outline: "none",
+              flexGrow: 1,
+              mr: { xs: 1, md: 2 }, 
+              px: 1,
+            }}
+            className="w-full px-3 py-1 rounded-xl border-2 border-gray-200 outline-none focus:border-green-700"
+          />
+        </Grid>
+
+        {/* Right Section: Navigation and Avatar */}
+        <Grid item xs={12} md={6} sx={{ display: "flex", alignItems: "center", justifyContent: { xs: "flex-start", md: "flex-end" } }}>
+          <Box sx={{ display: "flex", flexWrap: "nowrap", gap: 2 }}>
+            {['Notifications', 'Wallet', 'Enquiry', 'Settings'].map((text) => (
+              <Typography key={text} variant="h6" sx={{ fontWeight: 'bold', display: { xs: 'none', md: 'block' } }}>
+                {text}
+              </Typography>
+            ))}
+          </Box>
+          <Avatar src={defaultAvatar} alt="User" sx={{ width: 32, height: 32, ml: { xs: 1, md: 0 } }} />
+        </Grid>
+      </Grid>
     </Box>
   );
 };

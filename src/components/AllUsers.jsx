@@ -1,10 +1,27 @@
 import React, { useState, useEffect } from "react";
-import { Box, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Checkbox, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+import {
+  Box,
+  Button,
+  InputBase,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Checkbox,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+} from "@mui/material";
 import axios from "axios";
 import { CreateUserPopup } from "./CreateUserPopup";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
 import { PageDetail } from "./PageDetail";
 
-export const AllUsers = () => {
+const AllUsers = () => {
   const [users, setUsers] = useState([]);
   const [popupOpen, setPopupOpen] = useState(false);
 
@@ -14,14 +31,18 @@ export const AllUsers = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('https://ca10fe5fb746dd777eed.free.beeceptor.com/api/users/', {
-          headers: {
-            'Content-Type': 'application/json'
+        const response = await axios.get(
+          "https://ca10fe5fb746dd777eed.free.beeceptor.com/api/users/",
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
           }
-        });
+        );
         setUsers(response.data.data);
       } catch (error) {
         console.error("Error fetching data from the server", error);
+        // Optionally handle errors, e.g., display an error message
       }
     };
 
@@ -30,61 +51,95 @@ export const AllUsers = () => {
 
   return (
     <Box>
-        <PageDetail />
-        <Box sx={{ flex: 1, p: 4, width: '100%', maxWidth: '50%' }}>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
-            <Button variant="contained" color="primary" onClick={handlePopupOpen}>
+      <PageDetail />
+      <Box sx={{ p: 4 }}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            mb: 2,
+          }}
+        >
+          <InputBase
+            placeholder="Search here"
+            sx={{
+              bgcolor: "grey.100",
+              outline: "none",
+              flexGrow: 1,
+              mr: { xs: 1, md: 2 },
+              px: 1,
+            }}
+            className="w-full px-3 py-1 rounded-xl border-2 border-gray-200 outline-none focus:border-green-700"
+          />
+          <Button variant="outlined" color="transparent">
+            Filter
+          </Button>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handlePopupOpen}
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: 1,
+              textTransform: "none",
+            }}
+          >
+            <AddCircleIcon sx={{ fontSize: 30 }} />
             New User
-            </Button>
+          </Button>
         </Box>
         <TableContainer component={Paper}>
-            <Table>
+          <Table>
             <TableHead>
-                <TableRow>
+              <TableRow>
                 <TableCell padding="checkbox">
-                    <Checkbox />
+                  <Checkbox />
                 </TableCell>
                 <TableCell>Name</TableCell>
                 <TableCell>Email</TableCell>
                 <TableCell>Role</TableCell>
                 <TableCell align="right">Action</TableCell>
-                </TableRow>
+              </TableRow>
             </TableHead>
             <TableBody>
-                {users.map((user, index) => (
+              {users.map((user, index) => (
                 <TableRow key={index}>
-                    <TableCell padding="checkbox">
+                  <TableCell padding="checkbox">
                     <Checkbox />
-                    </TableCell>
-                    <TableCell>{user.name}</TableCell>
-                    <TableCell>{user.email}</TableCell>
-                    <TableCell>{user.role}</TableCell>
-                    <TableCell align="right">
+                  </TableCell>
+                  <TableCell>{user.name}</TableCell>
+                  <TableCell>{user.email}</TableCell>
+                  <TableCell>{user.role}</TableCell>
+                  <TableCell align="right">
                     <Button variant="text" color="success">
-                        Edit
+                      Edit
                     </Button>
                     <Button variant="text" color="error">
-                        Delete
+                      Delete
                     </Button>
-                    </TableCell>
+                  </TableCell>
                 </TableRow>
-                ))}
+              ))}
             </TableBody>
-            </Table>
+          </Table>
         </TableContainer>
 
         <Dialog open={popupOpen} onClose={handlePopupClose}>
-            <DialogTitle>Create New User</DialogTitle>
-            <DialogContent>
+          <DialogTitle>Create New User</DialogTitle>
+          <DialogContent>
             <CreateUserPopup onClose={handlePopupClose} />
-            </DialogContent>
-            <DialogActions>
+          </DialogContent>
+          <DialogActions>
             <Button onClick={handlePopupClose} color="primary">
-                Close
+              Close
             </Button>
-            </DialogActions>
+          </DialogActions>
         </Dialog>
-        </Box>
+      </Box>
     </Box>
   );
 };
+
+export { AllUsers };
