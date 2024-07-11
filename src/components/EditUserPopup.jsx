@@ -157,7 +157,7 @@ const EditUserPopup = ({ open, onClose, userId }) => {
                       />
                     </Box>
                     <Box className="mb-1">
-                      <Button type="submit" fullWidth variant="contained" color="primary">
+                      <Button type="submit" variant="contained" color="primary">
                         Edit User
                       </Button>
                     </Box>

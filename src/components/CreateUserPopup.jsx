@@ -16,7 +16,7 @@ import {
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import axios from "axios";
-import usersData from './users.json'; // Assuming users.json is in the same directory as this file
+import usersData from './users.json'; 
 
 const CreateUserPopup = ({ open, onClose, setUsers }) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -42,7 +42,7 @@ const CreateUserPopup = ({ open, onClose, setUsers }) => {
 
     try {
       const response = await axios.post("https://beeceptor.com/crud-api/users", formData);
-      const newUser = response.data; // Assuming API returns the created user object
+      const newUser = response.data; 
 
       setUsers((prevUsers) => [...prevUsers, newUser]);
       setFeedback("Success. New user added!");
@@ -60,7 +60,7 @@ const CreateUserPopup = ({ open, onClose, setUsers }) => {
     try {
       for (const user of usersData) {
         const response = await axios.post("https://beeceptor.com/crud-api/users", user);
-        const newUser = response.data; // Assuming API returns the created user object
+        const newUser = response.data; 
 
         setUsers((prevUsers) => [...prevUsers, newUser]);
       }
