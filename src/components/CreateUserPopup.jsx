@@ -15,7 +15,7 @@ import {
   DialogTitle,
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import usersData from './users'; 
+import axios from "axios";
 
 const CreateUserPopup = ({ open, onClose, setUsers }) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -36,14 +36,14 @@ const CreateUserPopup = ({ open, onClose, setUsers }) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const newUserId = usersData.length + 1;
-    const newUser = { id: newUserId, ...formData };
-
     try {
-      setUsers([...usersData, newUser]);
+      const response = await axios.post("https://beeceptor.com/crud-api/users", formData);
+      const newUser = response.data; 
+
+      setUsers((prevUsers) => [...prevUsers, newUser]);
       setFeedback("Success. New user added!");
       setTimeout(onClose, 3000);
     } catch (error) {

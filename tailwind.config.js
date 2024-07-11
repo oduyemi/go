@@ -1,10 +1,10 @@
-/** @type {import('tailwindcss').Config} */
-const defaultTheme = require("tailwindcss/defaultTheme");
 module.exports = {
-  content: [
-    "./src/**/*.{js,jsx,ts,tsx}",
-  ],
+  purge: ['./src/**/*.{js,jsx,ts,tsx}', './public/index.html'],
+  darkMode: false, 
   theme: {
+    extend: {},
+  },
+  variants: {
     extend: {
       colors:{
         main: "#F3EAF4"
